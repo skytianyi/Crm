@@ -8,8 +8,10 @@ import com.bjpowernode.crm.settings.domain.DicValue;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.DicValueService;
 import com.bjpowernode.crm.settings.service.UserService;
+import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
 import com.bjpowernode.crm.workbench.domain.ClueRemark;
+import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.omg.CORBA.OBJ_ADAPTER;
@@ -42,6 +44,9 @@ public class ClueController {
 
     @Autowired
     private ClueRemarkService clueRemarkService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @RequestMapping("/workbench/clue/toIndex.do")
     public String toIndex(HttpServletRequest request){
@@ -150,8 +155,10 @@ public class ClueController {
     public ModelAndView detailClue(String id){
         Clue clue = clueService.queryClueForDetailById(id);
         List<ClueRemark> clueRemarkList = clueRemarkService.queryClueRemarkForDetailByClueId(id);
+        List<Activity> activityList = activityService.queryActivityForDetailByClueId(id);
         ModelAndView mv=new ModelAndView();
         mv.addObject("clue",clue);
+        mv.addObject("activityList",activityList);
         mv.addObject("clueRemarkList",clueRemarkList);
         mv.setViewName("workbench/clue/detail");
         return mv;
@@ -214,5 +221,15 @@ public class ClueController {
             e.printStackTrace();
             return ReturnObject.error("系统繁忙,请稍候重试");
         }
+    }
+
+    @RequestMapping("/workbench/clue/queryActivityForDetailByNameClueId.do")
+    @ResponseBody
+    public Object queryActivityForDetailByNameClueId(String name,String clueId){
+        Map<String,Object> map=new HashMap<>();
+        map.put("name", name);
+        map.put("clueId", clueId);
+        List<Activity> activityList = activityService.queryActivityForDetailByNameClueId(map);
+        return activityList;
     }
 }

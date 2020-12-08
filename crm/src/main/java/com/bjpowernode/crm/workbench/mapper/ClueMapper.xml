@@ -402,23 +402,16 @@
     </delete>
 
   <select id="selectClueForDetailById" resultMap="BaseResultMap">
-     select  tc.id, tc.fullname, tdv3.value as appellation, u1.name as owner, tc.company, tc.job, tc.email, tc.phone, tc.website, tc.mphone,tdv.value as  state,
+    select  tc.id, tc.fullname, tdv3.value as appellation, u1.name as owner, tc.company, tc.job, tc.email, tc.phone, tc.website, tc.mphone,tdv.value as  state,
     tdv2.value as source, u2.name as create_by, tc.create_time, u3.name as edit_by, tc.edit_time, tc.description, tc.contact_summary,
     tc.next_contact_time, tc.address
     from tbl_clue tc
-    join tbl_user u1
-    on tc.owner=u1.id
-    join tbl_dic_value tdv
-    on tc.state=tdv.id
-    join tbl_dic_value tdv2
-    on tc.source=tdv2.id
-    join tbl_dic_value tdv3
-    on tc.appellation=tdv3.id
-
-    join tbl_user u2
-    on tc.create_by=u2.id
-    left join tbl_user u3
-    on tc.edit_by=u3.id
+    join tbl_user u1 on tc.owner=u1.id
+    left join tbl_dic_value tdv on tc.state=tdv.id
+    left join tbl_dic_value tdv2 on tc.source=tdv2.id
+    left join tbl_dic_value tdv3 on tc.appellation=tdv3.id
+    join tbl_user u2 on tc.create_by=u2.id
+    left join tbl_user u3 on tc.edit_by=u3.id
 
     where tc.id=#{id}
   </select>

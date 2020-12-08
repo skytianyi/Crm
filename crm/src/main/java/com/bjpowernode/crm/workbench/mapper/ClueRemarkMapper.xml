@@ -129,10 +129,8 @@
   <select id="selectClueRemarkForDetailByClueId" resultMap="BaseResultMap">
     select tcr.id,tcr.note_content,u1.name as create_by,tcr.create_time,u2.name as edit_by,tcr.edit_time,tcr.edit_flag
     FROM tbl_clue_remark tcr
-    join tbl_user u1
-    on tcr.create_by=u1.id
-    left join tbl_user u2
-    on tcr.edit_by=u2.id
+    join tbl_user u1 on tcr.create_by=u1.id
+    left join tbl_user u2 on tcr.edit_by=u2.id
     WHERE clue_id=#{clueId}
     order by tcr.create_time
   </select>

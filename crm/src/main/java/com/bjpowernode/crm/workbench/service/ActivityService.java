@@ -74,5 +74,26 @@ public interface ActivityService {
      */
     int saveCreateAcitivtyByList(List<Activity> activities);
 
+    /**
+     * 根据id查询市场活动的详细信息
+     * @param id
+     * @return
+     */
     Activity queryActivityForDetailById(String id);
+
+    /**
+     * 根据线索ID查询相关联的市场活动
+     * @param clueId
+     * @return
+     */
+    List<Activity> queryActivityForDetailByClueId(String clueId);
+
+    /**
+     * 查询没有与当前线索关联过的市场活动
+     * @param map
+     * @return
+     */
+    List<Activity> queryActivityForDetailByNameClueId(Map<String,Object> map);
+
+
 }

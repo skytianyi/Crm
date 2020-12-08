@@ -274,6 +274,27 @@
       where a.id=#{id}
   </select>
 
+  <select id="selectActivityForDetailByClueId" resultMap="BaseResultMap">
+    select a.id,a.name, a.start_date,a.end_date,u.name as owner
+    from tbl_activity a
+    JOIN tbl_user u on a.owner=u.id
+    JOIN tbl_clue_activity_relation car  on a.id=car.activity_id
+    where car.clue_id=#{clueId}
+  </select>
+
+  <select id="selectActivityForDetailByNameClueId" resultMap="BaseResultMap">
+
+  select a.id,a.name,a.start_date,a.end_date,u.name as owner
+  from tbl_activity a
+  join tbl_user u on a.owner=u.id
+  where a.name like "%" #{name} "%"
+  and a.id not in (
+  select activity_id
+  from tbl_clue_activity_relation
+  where clue_id=#{clueId})
+
+  </select>
+
 
 
 </mapper>

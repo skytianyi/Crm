@@ -169,6 +169,55 @@
 			})
 		});
 
+		//弹出关联市场模态窗口
+		$("#bundActivityBtn").click(function () {
+			$("#tBody").html("");
+			$("#bundModal").modal("show");
+		});
+
+		//给市场活动的搜索框添加键盘弹起事件
+		$("#searchActivityText").keyup(function () {
+			var name = this.value;
+			var clueId="${clue.id}";
+			$.ajax({
+				url:"workbench/clue/queryActivityForDetailByNameClueId.do",
+				data:{
+					name:name,
+					clueId:clueId
+				},
+				type:"post",
+				dataType:"json",
+				success:function (resp) {
+					var htmlStr="";
+					$.each(resp,function (i, obj) {
+							htmlStr+="<tr>";
+							htmlStr+="<td><input type=\"checkbox\" value='"+obj.id+"' name='xz'/></td>";
+								htmlStr+="<td>"+obj.name+"</td>";
+								htmlStr+="<td>"+obj.startDate+"</td>";
+								htmlStr+="<td>"+obj.endDate+"</td>";
+								htmlStr+="<td>"+obj.owner+"</td>";
+								htmlStr+="</tr>";
+					});
+
+					$("#tBody").html(htmlStr);
+
+				}
+			})
+		});
+
+		//关联市场活动的全选
+		$("#qx").click(function () {
+			$("input[name=xz]").prop("checked",this.checked);
+		});
+
+		//关联市场活动的反选
+		$("#tBody").on("click","input[name=xz]",function () {
+			$("#qx").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length);
+		})
+
+
+
+
 
 	});
 	
@@ -220,7 +269,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="searchActivityText" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -228,7 +277,7 @@
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="qx"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -236,8 +285,8 @@
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
+						<tbody id="tBody">
+							<%--<tr>
 								<td><input type="checkbox"/></td>
 								<td>发传单</td>
 								<td>2020-10-10</td>
@@ -250,7 +299,7 @@
 								<td>2020-10-10</td>
 								<td>2020-10-20</td>
 								<td>zhangsan</td>
-							</tr>
+							</tr>--%>
 						</tbody>
 					</table>
 				</div>
@@ -446,7 +495,17 @@
 						</tr>
 					</thead>
 					<tbody>
+					<c:forEach items="${activityList}" var="act">
 						<tr>
+							<td><input type="checkbox" value="${act.id}"/></td>
+							<td>${act.name}</td>
+							<td>${act.startDate}</td>
+							<td>${act.endDate}</td>
+							<td>${act.owner}</td>
+							<td><a href="javascript:void(0);" activityId="${act.id}" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
+						</tr>
+					</c:forEach>
+						<%--<tr>
 							<td>发传单</td>
 							<td>2020-10-10</td>
 							<td>2020-10-20</td>
@@ -459,13 +518,13 @@
 							<td>2020-10-20</td>
 							<td>zhangsan</td>
 							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+						</tr>--%>
 					</tbody>
 				</table>
 			</div>
 			
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="bundActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>
