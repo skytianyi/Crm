@@ -1,6 +1,7 @@
 package com.bjpowernode.crm.workbench.service;
 
 import com.bjpowernode.crm.workbench.domain.Customer;
+import com.bjpowernode.crm.workbench.domain.CustomerRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,11 @@ public interface CustomerService {
 
 
     int deleteCustomerByIds(String[] ids);
+
+    Customer queryCustomerForDetailById(String id);
+
+
+
 
 
 

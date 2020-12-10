@@ -51,7 +51,22 @@ public interface CustomerMapper {
      */
     int updateCustomer(Customer customer);
 
+    /**
+     * 根据IDS删除客户
+     * @param ids
+     * @return
+     */
     int deleteCustomerByIds(String[] ids);
+
+    /**
+     * 根据ID查询客户的详细信息
+     * @param id
+     * @return
+     */
+    Customer selectCustomerForDetailById(String id);
+
+
+
 
 
 }

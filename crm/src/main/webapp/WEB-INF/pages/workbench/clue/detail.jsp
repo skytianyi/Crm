@@ -172,6 +172,8 @@
 		//弹出关联市场模态窗口
 		$("#bundActivityBtn").click(function () {
 			$("#tBody").html("");
+			$("#searchActivityText").val("");
+            $("#qx").prop("checked",false);
 			$("#bundModal").modal("show");
 		});
 
@@ -213,7 +215,79 @@
 		//关联市场活动的反选
 		$("#tBody").on("click","input[name=xz]",function () {
 			$("#qx").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length);
-		})
+		});
+
+		//点击关联按钮时
+        $("#saveBundActivityBtn").click(function () {
+            var clueId="${clue.id}";
+            var $xz = $("input[name=xz]:checked");
+            if($xz.length==0){
+                alert("至少选择一个要关联的市场活动");
+                return;
+            }
+            var param="";
+            $.each($xz,function () {
+                var id = this.value;
+                param+="activityIds="+id+"&";
+            });
+            param+="clueId="+clueId;
+
+            $.ajax({
+                url:"workbench/clue/saveClueActivityRelationByList.do",
+                data:param,
+                type:"post",
+                dataType:"json",
+                success:function (resp) {
+
+                    if(resp.code=="1"){
+                        var htmlStr="";
+                        $.each(resp.data,function (i,obj) {
+                            htmlStr+="<tr id='tr_"+obj.id+"'>";
+                            htmlStr+="<td>"+obj.name+"</td>";
+                            htmlStr+="<td>"+obj.startDate+"</td>";
+                            htmlStr+="<td>"+obj.endDate+"</td>";
+                            htmlStr+="<td>"+obj.owner+"</td>";
+                            htmlStr+="<td><a href=\"javascript:void(0);\" activityId=\""+obj.id+"\" style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>解除关联</a></td>";
+                            htmlStr+="</tr>";
+                        });
+
+                        $("#bundModal").modal("hide");
+                        $("#outTBodyList").append(htmlStr);
+
+                    }else {
+                        alert(resp.message);
+                    }
+                }
+
+            })
+
+        });
+
+        //给所有的解除关联添加点击事件
+        $("#outTBodyList").on("click","a",function () {
+           var activityId = $(this).attr("activityId");
+           var clueId="${clue.id}";
+
+           if(window.confirm("确定要解除关联吗?")){
+               $.ajax({
+                   url:"workbench/clue/deleteClueActivityRelation.do",
+                   data:{
+                       activityId:activityId,
+                       clueId:clueId
+                   },
+                   type:"post",
+                   dataType:"json",
+                   success:function (resp) {
+                       if(resp.code=="1"){
+                           $("#tr_"+activityId).remove();
+                       }else {
+                           alert(resp.message);
+                       }
+                   }
+               });
+           }
+
+        });
 
 
 
@@ -305,7 +379,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="saveBundActivityBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -494,10 +568,9 @@
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="outTBodyList">
 					<c:forEach items="${activityList}" var="act">
-						<tr>
-							<td><input type="checkbox" value="${act.id}"/></td>
+						<tr id="tr_${act.id}">
 							<td>${act.name}</td>
 							<td>${act.startDate}</td>
 							<td>${act.endDate}</td>

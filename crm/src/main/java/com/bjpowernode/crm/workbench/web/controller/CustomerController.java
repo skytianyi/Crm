@@ -7,6 +7,8 @@ import com.bjpowernode.crm.commons.util.UUIDUtil;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Customer;
+import com.bjpowernode.crm.workbench.domain.CustomerRemark;
+import com.bjpowernode.crm.workbench.service.CustomerRemarkService;
 import com.bjpowernode.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,9 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private CustomerRemarkService customerRemarkService;
 
     @RequestMapping("/workbench/customer/toIndex.do")
     public String toIndex(HttpServletRequest request){
@@ -127,6 +132,66 @@ public class CustomerController {
             return ReturnObject.error("系统异常,请稍候重试");
         }
     }
+
+    @RequestMapping("/workbench/customer/detailCustomer.do")
+    public String detailCustomer(String id,HttpServletRequest request){
+        Customer customer = customerService.queryCustomerForDetailById(id);
+        request.setAttribute("customer", customer);
+        return "workbench/customer/detail";
+    }
+
+    @RequestMapping("/workbench/customer/getCustomerRemarkByCustomerId.do")
+    @ResponseBody
+    public Object getCustomerRemarkByCustomerId(String customerId){
+        List<CustomerRemark> customerRemarkList = customerRemarkService.queryCustomerRemarkByCustomerId(customerId);
+        return customerRemarkList;
+    }
+
+    @RequestMapping("/workbench/customer/saveCustomerRemark.do")
+    @ResponseBody
+    public Object saveCustomerRemark(CustomerRemark customerRemark,HttpSession session){
+        User user= (User) session.getAttribute(MyConstans.USER);
+        customerRemark.setId(UUIDUtil.getUUID());
+        customerRemark.setCreateBy(user.getId());
+        customerRemark.setCreateTime(DateTimeUtil.getFormatDateTime(new Date()));
+        customerRemark.setEditFlag(MyConstans.REMARK_EDIT_FLAG_NOT);
+        try {
+            int rows = customerRemarkService.saveCustomerRemark(customerRemark);
+            if(rows>0){
+                return ReturnObject.success(customerRemark);
+            }else {
+                return ReturnObject.error("系统繁忙,请稍候重试");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ReturnObject.error("系统繁忙,请稍候重试");
+        }
+    }
+
+    @RequestMapping("/workbench/customer/updateCustomerRemark.do")
+    @ResponseBody
+    public Object updateCustomerRemark(CustomerRemark customerRemark,HttpSession session){
+        User user= (User) session.getAttribute(MyConstans.USER);
+        customerRemark.setEditFlag(MyConstans.REMARK_EDIT_FLAG_YES);
+        customerRemark.setEditBy(user.getId());
+        customerRemark.setEditTime(DateTimeUtil.getFormatDateTime(new Date()));
+
+        try {
+            int rows = customerRemarkService.updateCustomerRemark(customerRemark);
+            if(rows>0){
+                return ReturnObject.success(customerRemark);
+            }else {
+                return ReturnObject.error("系统繁忙,请稍候重试");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ReturnObject.error("系统繁忙,请稍候重试");
+        }
+    }
+
+
+
+
 
 
 }

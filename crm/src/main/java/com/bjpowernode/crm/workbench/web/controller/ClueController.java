@@ -10,8 +10,10 @@ import com.bjpowernode.crm.settings.service.DicValueService;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.ClueActivityRelation;
 import com.bjpowernode.crm.workbench.domain.ClueRemark;
 import com.bjpowernode.crm.workbench.service.ActivityService;
+import com.bjpowernode.crm.workbench.service.ClueActivityRelationService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.omg.CORBA.OBJ_ADAPTER;
@@ -47,6 +49,9 @@ public class ClueController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private ClueActivityRelationService clueActivityRelationService;
 
     @RequestMapping("/workbench/clue/toIndex.do")
     public String toIndex(HttpServletRequest request){
@@ -231,5 +236,50 @@ public class ClueController {
         map.put("clueId", clueId);
         List<Activity> activityList = activityService.queryActivityForDetailByNameClueId(map);
         return activityList;
+    }
+
+    @RequestMapping("/workbench/clue/saveClueActivityRelationByList.do")
+    @ResponseBody
+    public Object saveClueActivityRelationByList(String clueId,String [] activityIds){
+        List relationList=new ArrayList();
+        ClueActivityRelation clueActivityRelation=null;
+        for (String ai : activityIds) {
+            clueActivityRelation=new ClueActivityRelation();
+            clueActivityRelation.setId(UUIDUtil.getUUID());
+            clueActivityRelation.setClueId(clueId);
+            clueActivityRelation.setActivityId(ai);
+            relationList.add(clueActivityRelation);
+        }
+
+        try {
+            int rows = clueActivityRelationService.saveClueActivityRelationByList(relationList);
+            if(rows>0){
+                List<Activity> activityList = activityService.queryActivityForDetailByIds(activityIds);
+                return ReturnObject.success(activityList);
+            }else {
+                return ReturnObject.error("系统繁忙,请稍候重试");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ReturnObject.error("系统繁忙,请稍候重试");
+
+        }
+    }
+
+    @RequestMapping("/workbench/clue/deleteClueActivityRelation.do")
+    @ResponseBody
+    public Object deleteClueActivityRelation(ClueActivityRelation car){
+        try {
+            int rows = clueActivityRelationService.deleteClueActivityRelationByClueIdAndActivityId(car);
+            if(rows>0){
+                return ReturnObject.success();
+            }else {
+                return ReturnObject.error("系统繁忙,请稍候重试");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ReturnObject.error("系统繁忙,请稍候重试");
+
+        }
     }
 }

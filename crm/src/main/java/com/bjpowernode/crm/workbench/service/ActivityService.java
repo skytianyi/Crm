@@ -95,5 +95,12 @@ public interface ActivityService {
      */
     List<Activity> queryActivityForDetailByNameClueId(Map<String,Object> map);
 
+    /**
+     * 根据IDS批量查询符合条件的市场活动
+     * @param ids
+     * @return
+     */
+    List<Activity> queryActivityForDetailByIds(String[] ids);
+
 
 }

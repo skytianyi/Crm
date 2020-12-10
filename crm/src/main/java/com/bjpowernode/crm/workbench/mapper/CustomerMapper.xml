@@ -255,4 +255,15 @@
         </foreach>
     </delete>
 
+    <select id="selectCustomerForDetailById" resultMap="BaseResultMap">
+         select
+           c.id,u1.name as owner, c.name, c.website, c.phone, u2.name as create_by, c.create_time, u3.name as edit_by, c.edit_time, c.contact_summary,
+          c.next_contact_time, c.description, c.address
+        from tbl_customer c
+        join tbl_user u1 on u1.id=c.owner
+        join tbl_user u2 on u2.id=c.create_by
+        left join tbl_user u3 on u3.id=c.edit_by
+        where c.id=#{id}
+    </select>
+
 </mapper>

@@ -50,4 +50,8 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.deleteCustomerByIds(ids);
     }
 
+    @Override
+    public Customer queryCustomerForDetailById(String id) {
+        return customerMapper.selectCustomerForDetailById(id);
+    }
 }

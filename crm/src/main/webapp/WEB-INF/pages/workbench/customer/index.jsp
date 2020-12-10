@@ -302,7 +302,7 @@
                     $.each(resp.customerList,function (i, obj) {
                         htmlStr+="<tr>";
                         htmlStr+="<td><input type=\"checkbox\" name=\"xz\" value='"+obj.id+"'/></td>";
-                        htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\"onclick=\"window.location.href=detail.html\">"+obj.name+"</a></td>";
+                        htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\"onclick=\"window.location.href='workbench/customer/detailCustomer.do?id="+obj.id+"'\">"+obj.name+"</a></td>";
                         htmlStr+="<td>"+obj.owner+"</td>";
                         htmlStr+="<td>"+obj.phone+"</td>";
                         htmlStr+="<td>"+obj.website+"</td>";
