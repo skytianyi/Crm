@@ -84,4 +84,14 @@ public class ActivityServiceImpl implements ActivityService {
     public List<Activity> queryActivityForDetailByIds(String[] ids) {
         return activityMapper.selectActivityForDetailByIds(ids);
     }
+
+    @Override
+    public List<Activity> queryActivityForConvertByNameClueId(String name, String clueId) {
+        return activityMapper.selectActivityForConvertByNameClueId(name, clueId);
+    }
+
+    @Override
+    public List<Activity> queryActivityForDetailByName(String name) {
+        return activityMapper.selectActivityForDetailByName(name);
+    }
 }

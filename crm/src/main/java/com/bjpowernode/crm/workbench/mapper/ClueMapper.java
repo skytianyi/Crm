@@ -13,7 +13,6 @@ public interface ClueMapper {
 
     int insertSelective(Clue record);
 
-    Clue selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(Clue record);
 

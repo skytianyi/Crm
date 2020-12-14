@@ -39,6 +39,20 @@ public interface CustomerRemarkMapper {
      */
     int  updateCustomerRemark(CustomerRemark customerRemark);
 
+    /**
+     * 根据ID删除客户备注信息
+     * @param id
+     * @return
+     */
+    int deleteCustomerRemarkById(String id);
+
+    /**
+     * 批量添加客户备注信息
+     * @param crList
+     * @return
+     */
+    int insertCustomerRemarkByList(List<CustomerRemark> crList);
+
 
 
 }

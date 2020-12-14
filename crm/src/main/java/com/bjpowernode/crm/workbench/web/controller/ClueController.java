@@ -16,6 +16,7 @@ import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueActivityRelationService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
+import org.apache.ibatis.annotations.Param;
 import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -282,4 +283,37 @@ public class ClueController {
 
         }
     }
+
+    @RequestMapping("/workbench/clue/toConvert.do")
+    public String toConvert(String clueId,HttpServletRequest request){
+        Clue clue = clueService.queryClueForDetailById(clueId);
+        List<DicValue> stageList = dicValueService.queryDicValueByTypeCode("stage");
+        request.setAttribute("clue", clue);
+        request.setAttribute("stageList",stageList );
+        return "workbench/clue/convert";
+    }
+
+    @RequestMapping("/workbench/clue/queryActivityForConvertByNameClueId.do")
+    @ResponseBody
+    public Object queryActivityForConvertByNameClueId(String name,String clueId){
+        List<Activity> activityList = activityService.queryActivityForConvertByNameClueId(name, clueId);
+
+        return activityList;
+    }
+
+    @RequestMapping("/workbench/clue/saveConvertClue.do")
+    @ResponseBody
+    public Object saveConvertClue(@RequestParam Map<String,Object> map,HttpSession session){
+        map.put(MyConstans.USER,session.getAttribute(MyConstans.USER));
+
+        try {
+            clueService.saveConvertClue(map);
+            return ReturnObject.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ReturnObject.error("系统繁忙,请稍候重试.");
+        }
+
+    }
+
 }

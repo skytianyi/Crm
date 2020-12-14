@@ -18,7 +18,7 @@ public interface ClueRemarkMapper {
     int updateByPrimaryKey(ClueRemark record);
 
     /**
-     * 根据clueId查询所有的线索备注
+     * 根据clueId查询所有详细的线索备注
      * @param clueId
      * @return
      */
@@ -44,4 +44,17 @@ public interface ClueRemarkMapper {
      * @return
      */
     int updateClueRemark(ClueRemark clueRemark);
+
+    /**
+     * 根据clueId查询所有的线索备注
+     * @param clueId
+     * @return
+     */
+    List<ClueRemark> selectClueRemarkByClueId(String clueId);
+
+    /**
+     * 根据clueId删除线索备注
+     * @param id
+     */
+    void deleteClueRemarkByClueId(String id);
 }

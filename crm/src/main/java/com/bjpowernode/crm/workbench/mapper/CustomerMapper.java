@@ -65,6 +65,12 @@ public interface CustomerMapper {
      */
     Customer selectCustomerForDetailById(String id);
 
+    /**
+     * 根据名称模糊查询客户信息
+     * @param name
+     * @return
+     */
+    List<Customer> selectCustomerForBlurName(String name);
 
 
 

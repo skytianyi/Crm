@@ -149,7 +149,25 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         });
 
         //点击删除图标时
+		$("#remarkDivList").on("click","[name=deleteC]",function () {
+			var remarkId = $(this).attr("remarkId");
 
+			$.ajax({
+				url:"workbench/customer/deleteCustomerRemark.do",
+				type:"post",
+				data:{
+					id:remarkId
+				},
+				dataType:"json",
+				success:function (resp) {
+					if(resp.code=="1"){
+						$("#div_"+remarkId).remove();
+					}else {
+						alert(resp.message);
+					}
+				}
+			})
+		})
 
 
 

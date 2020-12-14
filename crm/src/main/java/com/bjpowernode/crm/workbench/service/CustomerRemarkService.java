@@ -16,5 +16,8 @@ public interface CustomerRemarkService {
 
     int  updateCustomerRemark(CustomerRemark customerRemark);
 
+    int deleteCustomerRemarkById(String id);
+
+
 
 }

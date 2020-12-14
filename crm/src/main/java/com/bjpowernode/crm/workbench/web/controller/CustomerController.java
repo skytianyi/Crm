@@ -189,6 +189,22 @@ public class CustomerController {
         }
     }
 
+    @RequestMapping("/workbench/customer/deleteCustomerRemark.do")
+    @ResponseBody
+    public Object deleteCustomerRemark(String id){
+        try {
+            int rows = customerRemarkService.deleteCustomerRemarkById(id);
+            if(rows>0){
+                return ReturnObject.success();
+            }else {
+                return ReturnObject.error("系统繁忙,请稍候重试");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ReturnObject.error("系统繁忙,请稍候重试");
+        }
+    }
+
 
 
 

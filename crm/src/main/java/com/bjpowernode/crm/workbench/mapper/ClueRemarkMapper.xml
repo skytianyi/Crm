@@ -154,4 +154,15 @@
     where id = #{id}
   </update>
 
+  <select id="selectClueRemarkByClueId" resultMap="BaseResultMap">
+    select *
+    from tbl_clue_remark
+    where clue_id=#{clueId}
+  </select>
+
+  <delete id="deleteClueRemarkByClueId">
+    delete from tbl_clue_remark
+    where clue_id=#{clueId}
+  </delete>
+
 </mapper>

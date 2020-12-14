@@ -28,6 +28,8 @@ public interface CustomerService {
 
     Customer queryCustomerForDetailById(String id);
 
+    List<Customer> queryCustomerForBlurName(String name);
+
 
 
 

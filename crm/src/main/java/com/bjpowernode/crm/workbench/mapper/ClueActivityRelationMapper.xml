@@ -82,4 +82,15 @@
     where clue_id=#{clueId} and activity_id=#{activityId}
   </delete>
 
+  <select id="selectCluActRelationByClueId" resultMap="BaseResultMap">
+    select *
+    from tbl_clue_activity_relation
+    where clue_id =#{clueId}
+  </select>
+
+  <delete id="deleteClueActivityRelationByClueId">
+     delete from tbl_clue_activity_relation
+     where clue_id=#{clueId}
+  </delete>
+
 </mapper>

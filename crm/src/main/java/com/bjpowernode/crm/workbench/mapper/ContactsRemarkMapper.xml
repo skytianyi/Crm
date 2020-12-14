@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bjpowernode.crm.workbench.mapper.CustomerRemarkMapper" >
-  <resultMap id="BaseResultMap" type="com.bjpowernode.crm.workbench.domain.CustomerRemark" >
+<mapper namespace="com.bjpowernode.crm.workbench.mapper.ContactsRemarkMapper" >
+  <resultMap id="BaseResultMap" type="com.bjpowernode.crm.workbench.domain.ContactsRemark" >
     <id column="id" property="id" jdbcType="CHAR" />
     <result column="note_content" property="noteContent" jdbcType="VARCHAR" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
@@ -9,31 +9,31 @@
     <result column="edit_by" property="editBy" jdbcType="VARCHAR" />
     <result column="edit_time" property="editTime" jdbcType="CHAR" />
     <result column="edit_flag" property="editFlag" jdbcType="CHAR" />
-    <result column="customer_id" property="customerId" jdbcType="CHAR" />
+    <result column="contacts_id" property="contactsId" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, customer_id
+    id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, contacts_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from tbl_customer_remark
+    from tbl_contacts_remark
     where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from tbl_customer_remark
+    delete from tbl_contacts_remark
     where id = #{id,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.bjpowernode.crm.workbench.domain.CustomerRemark" >
-    insert into tbl_customer_remark (id, note_content, create_by, 
+  <insert id="insert" parameterType="com.bjpowernode.crm.workbench.domain.ContactsRemark" >
+    insert into tbl_contacts_remark (id, note_content, create_by, 
       create_time, edit_by, edit_time, 
-      edit_flag, customer_id)
+      edit_flag, contacts_id)
     values (#{id,jdbcType=CHAR}, #{noteContent,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=CHAR}, #{editBy,jdbcType=VARCHAR}, #{editTime,jdbcType=CHAR}, 
-      #{editFlag,jdbcType=CHAR}, #{customerId,jdbcType=CHAR})
+      #{editFlag,jdbcType=CHAR}, #{contactsId,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.bjpowernode.crm.workbench.domain.CustomerRemark" >
-    insert into tbl_customer_remark
+  <insert id="insertSelective" parameterType="com.bjpowernode.crm.workbench.domain.ContactsRemark" >
+    insert into tbl_contacts_remark
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -56,8 +56,8 @@
       <if test="editFlag != null" >
         edit_flag,
       </if>
-      <if test="customerId != null" >
-        customer_id,
+      <if test="contactsId != null" >
+        contacts_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -82,13 +82,13 @@
       <if test="editFlag != null" >
         #{editFlag,jdbcType=CHAR},
       </if>
-      <if test="customerId != null" >
-        #{customerId,jdbcType=CHAR},
+      <if test="contactsId != null" >
+        #{contactsId,jdbcType=CHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bjpowernode.crm.workbench.domain.CustomerRemark" >
-    update tbl_customer_remark
+  <update id="updateByPrimaryKeySelective" parameterType="com.bjpowernode.crm.workbench.domain.ContactsRemark" >
+    update tbl_contacts_remark
     <set >
       <if test="noteContent != null" >
         note_content = #{noteContent,jdbcType=VARCHAR},
@@ -108,59 +108,29 @@
       <if test="editFlag != null" >
         edit_flag = #{editFlag,jdbcType=CHAR},
       </if>
-      <if test="customerId != null" >
-        customer_id = #{customerId,jdbcType=CHAR},
+      <if test="contactsId != null" >
+        contacts_id = #{contactsId,jdbcType=CHAR},
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bjpowernode.crm.workbench.domain.CustomerRemark" >
-    update tbl_customer_remark
+  <update id="updateByPrimaryKey" parameterType="com.bjpowernode.crm.workbench.domain.ContactsRemark" >
+    update tbl_contacts_remark
     set note_content = #{noteContent,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=CHAR},
       edit_by = #{editBy,jdbcType=VARCHAR},
       edit_time = #{editTime,jdbcType=CHAR},
       edit_flag = #{editFlag,jdbcType=CHAR},
-      customer_id = #{customerId,jdbcType=CHAR}
+      contacts_id = #{contactsId,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
 
-  <select id="selectCustomerRemarkByCustomerId" resultMap="BaseResultMap">
-    select
-    tcr.id, tcr.note_content, u1.name as create_by, tcr.create_time, u2.name as edit_by, tcr.edit_time, tcr.edit_flag, tcr.customer_id
-    from tbl_customer_remark tcr
-    join tbl_user u1 on tcr.create_by=u1.id
-    left join tbl_user u2 on tcr.edit_by=u2.id
-    where customer_id = #{customerId}
-    order by tcr.create_time
-  </select>
-
-  <insert id="insertCustomerRemark">
-     insert into tbl_customer_remark (id, note_content, create_by,
-      create_time, edit_flag, customer_id)
-    values (#{id,jdbcType=CHAR}, #{noteContent,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},
-      #{createTime,jdbcType=CHAR},#{editFlag,jdbcType=CHAR}, #{customerId,jdbcType=CHAR})
-  </insert>
-
-  <update id="updateCustomerRemark">
-    update tbl_customer_remark
-    set note_content = #{noteContent,jdbcType=VARCHAR},
-      edit_by = #{editBy,jdbcType=VARCHAR},
-      edit_time = #{editTime,jdbcType=CHAR},
-      edit_flag = #{editFlag,jdbcType=CHAR}
-    where id = #{id,jdbcType=CHAR}
-  </update>
-  <delete id="deleteCustomerRemarkById">
-    delete from tbl_customer_remark
-    where id=#{id}
-  </delete>
-
-  <insert id="insertCustomerRemarkByList">
-    insert into tbl_customer_remark
+  <insert id="insertContactsRemarkByList">
+    insert into tbl_contacts_remark
     values
     <foreach collection="list" item="cr" separator=",">
-      (#{cr.id}, #{cr.noteContent}, #{cr.createBy}, #{cr.createTime}, #{cr.editBy}, #{cr.editTime}, #{cr.editFlag}, #{cr.customerId})
+      ( #{cr.id}, #{cr.noteContent}, #{cr.createBy}, #{cr.createTime}, #{cr.editBy}, #{cr.editTime}, #{cr.editFlag}, #{cr.contactsId})
     </foreach>
   </insert>
 

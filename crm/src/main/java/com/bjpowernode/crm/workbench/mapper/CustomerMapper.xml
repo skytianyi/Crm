@@ -266,4 +266,10 @@
         where c.id=#{id}
     </select>
 
+    <select id="selectCustomerForBlurName" resultMap="BaseResultMap">
+        select name
+        from tbl_customer
+        where name like '%' #{name} '%'
+    </select>
+
 </mapper>

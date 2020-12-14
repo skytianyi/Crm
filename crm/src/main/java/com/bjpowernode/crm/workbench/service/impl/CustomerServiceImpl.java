@@ -54,4 +54,9 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer queryCustomerForDetailById(String id) {
         return customerMapper.selectCustomerForDetailById(id);
     }
+
+    @Override
+    public List<Customer> queryCustomerForBlurName(String name) {
+        return customerMapper.selectCustomerForBlurName(name);
+    }
 }

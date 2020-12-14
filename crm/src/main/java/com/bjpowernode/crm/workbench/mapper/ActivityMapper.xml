@@ -307,6 +307,21 @@
 
   </select>
 
+  <select id="selectActivityForConvertByNameClueId" resultMap="BaseResultMap">
+    SELECT a.id,a.name,a.start_date,a.end_date,u.name as owner
+    from tbl_activity a
+    join tbl_clue_activity_relation car on a.id=car.activity_id
+    join tbl_user u on a.owner=u.id
+    WHERE car.clue_id=#{clueId} and a.name like '%' #{name} '%'
+  </select>
+
+  <select id="selectActivityForDetailByName" resultMap="BaseResultMap">
+    SELECT a.id,a.name,a.start_date,a.end_date,u.name as owner
+    from tbl_activity a
+    join tbl_user u on a.owner=u.id
+    WHERE a.name like '%' #{name} '%'
+  </select>
+
 
 
 </mapper>

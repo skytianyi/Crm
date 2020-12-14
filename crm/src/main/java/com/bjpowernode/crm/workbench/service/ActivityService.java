@@ -1,6 +1,7 @@
 package com.bjpowernode.crm.workbench.service;
 
 import com.bjpowernode.crm.workbench.domain.Activity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -102,5 +103,19 @@ public interface ActivityService {
      */
     List<Activity> queryActivityForDetailByIds(String[] ids);
 
+    /**
+     * 模糊查询所有与线索Id有关的市场活动
+     * @param name
+     * @param clueId
+     * @return
+     */
+    List<Activity> queryActivityForConvertByNameClueId(String name,String clueId);
 
+
+    /**
+     * 根据市场活动name模糊查询符合的市场活动
+     * @param name
+     * @return
+     */
+    List<Activity> queryActivityForDetailByName(String name);
 }
