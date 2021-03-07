@@ -30,6 +30,7 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!--拦截器-->
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/settings/**"/>

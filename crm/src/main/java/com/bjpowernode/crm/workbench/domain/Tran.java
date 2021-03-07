@@ -37,6 +37,16 @@ public class Tran {
 
     private String nextContactTime;
 
+    private String orderNo;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
     public String getId() {
         return id;
     }

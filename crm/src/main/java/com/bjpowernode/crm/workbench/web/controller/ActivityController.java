@@ -148,7 +148,7 @@ public class ActivityController {
     }
 
     /*
-      文件下载：通过流手动输出响应信息到浏览器，而不是借助controller方法的返回值返回响应信息，
+      测试文件下载：通过流手动输出响应信息到浏览器，而不是借助controller方法的返回值返回响应信息，
       所以，这里方法的返回值类型定义成void。
     */
     @RequestMapping("/workbench/activity/fileDownload.do")
@@ -353,15 +353,11 @@ public class ActivityController {
     @RequestMapping("/workbench/activity/importActivity.do")
     @ResponseBody
     public Object importActivity(MultipartFile activityFile,HttpSession session){
-        File file=new File("K:\\全新学习\\19-crm\\文档\\"+activityFile.getOriginalFilename());
+
         User user= (User) session.getAttribute(MyConstans.USER);
         try {
-            //在磁盘上生成一个同样的文件
-            activityFile.transferTo(file);
-
-            //使用apache-poi解析excel文件，封装activit
-            //1.根据excel文件创建HSSFWorkbook对象，对应封装了excel文件的所有信息
-            InputStream is=new FileInputStream("K:\\全新学习\\19-crm\\文档\\"+activityFile.getOriginalFilename());
+            //不经过磁盘效率变高
+            InputStream is = activityFile.getInputStream();
             HSSFWorkbook wb=new HSSFWorkbook(is);
             //2.通过wb获取HSSFSheet对象，对应封装了一页的所有信息
             HSSFSheet sheet = wb.getSheetAt(0);
@@ -399,6 +395,7 @@ public class ActivityController {
                 activityList.add(activity);
             }
 
+            wb.close();
             //调用service层方法，批量保存创建的市场活动
             int ret = activityService.saveCreateAcitivtyByList(activityList);
             return ReturnObject.success(ret);

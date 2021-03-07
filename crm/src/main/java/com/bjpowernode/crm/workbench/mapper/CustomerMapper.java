@@ -73,6 +73,12 @@ public interface CustomerMapper {
     List<Customer> selectCustomerForBlurName(String name);
 
 
+    /**
+     * 根据客户名称查询客户
+     * @param name
+     * @return
+     */
+    Customer selectCustomerByName(String name);
 
 
 }

@@ -41,6 +41,9 @@ public class ClueServiceImpl implements ClueService {
     private ContactsRemarkMapper contactsRemarkMapper;
 
     @Autowired
+    private ContactsActivityRelationMapper contactsActivityRelationMapper;
+
+    @Autowired
     private ClueActivityRelationMapper clueActivityRelationMapper;
 
     @Autowired
@@ -178,16 +181,20 @@ public class ClueServiceImpl implements ClueService {
         List<ClueActivityRelation> carList = clueActivityRelationMapper.selectCluActRelationByClueId(clueId);
 
         //把线索和市场活动的关联关系转换到联系人和市场活动的关联关系表中
-
         if(carList!=null && carList.size()>0){
 
             ContactsActivityRelation conar=null;
+            List<ContactsActivityRelation> conActRelList=new ArrayList<>();
+
             for (ClueActivityRelation car : carList) {
                 conar=new ContactsActivityRelation();
                 conar.setId(UUIDUtil.getUUID());
                 conar.setContactsId(contacts.getId());
                 conar.setActivityId(car.getActivityId());
+                conActRelList.add(conar);
             }
+
+            contactsActivityRelationMapper.insertConActRelByList(conActRelList);
         }
 
         //如果需要创建交易,还要往交易表中添加一条记录
@@ -200,11 +207,13 @@ public class ClueServiceImpl implements ClueService {
             tran.setCreateTime(DateTimeUtil.getFormatDateTime(new Date()));
             tran.setCreateBy(user.getId());
             tran.setMoney((String)map.get("money"));
-            tran.setStage((String)map.get("stage"));
+            tran.setStage((String)map.get("stage"));//TODO
             tran.setName((String)map.get("name"));
             tran.setActivityId((String)map.get("activityId"));
-            tran.setExpectedDate((String)map.get("expectedClosingDate"));
+            tran.setExpectedDate((String)map.get("expectedDate"));//TODO
             tran.setOwner(user.getId());
+
+            //type source description contactSummary nextContactTime
             tranMapper.insertSelective(tran);
 
             //如果需要创建交易,还要把线索的备注信息转换到交易备注表中一份
@@ -214,11 +223,11 @@ public class ClueServiceImpl implements ClueService {
                 tranRemark=new TranRemark();
 
                 tranRemark.setId(UUIDUtil.getUUID());
-                tranRemark.setCreateBy(tranRemark.getCreateBy());
-                tranRemark.setCreateTime(tranRemark.getCreateTime());
-                tranRemark.setEditFlag(tranRemark.getEditFlag());
-                tranRemark.setEditBy(tranRemark.getEditBy());
-                tranRemark.setEditTime(tranRemark.getEditTime());
+                tranRemark.setCreateBy(cr.getCreateBy());
+                tranRemark.setCreateTime(cr.getCreateTime());
+                tranRemark.setEditFlag(cr.getEditFlag());
+                tranRemark.setEditBy(cr.getEditBy());
+                tranRemark.setEditTime(cr.getEditTime());
                 tranRemark.setNoteContent(cr.getNoteContent());
                 tranRemark.setTranId(tran.getId());
                 trList.add(tranRemark);
@@ -232,7 +241,6 @@ public class ClueServiceImpl implements ClueService {
         clueActivityRelationMapper.deleteClueActivityRelationByClueId(clueId);
         //	    删除线索
         clueMapper.deleteByPrimaryKey(clueId);
-
 
     }
 }

@@ -82,7 +82,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			var activityId=$("#hidden-activityId").val();
 			var money = $("#money").val();
 			var name = $("#name").val();
-			var expectedClosingDate = $("#expectedClosingDate").val();
+			var expectedDate = $("#expectedDate").val();
 			var stage = $("#stage").val();
 			var activityId = $("#hidden-activityId").val();
 			var isCreateTransaction = $("#isCreateTransaction").prop("checked");
@@ -91,7 +91,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			var str= new Date();
 			var time= str.getFullYear() + "-" + (str.getMonth() + 1) + "-" + str.getDate();
 
-			if(expectedClosingDate<time){
+			if(expectedDate<time){
 				alert("下次联系时间不能小于当前时间");
 				return;
 			}
@@ -102,7 +102,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					clueId:clueId,
 					money:money,
 					name:name,
-					expectedClosingDate:expectedClosingDate,
+					expectedDate:expectedDate,
 					stage:stage,
 					activityId:activityId,
 					isCreateTransaction:isCreateTransaction
@@ -205,15 +205,15 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		    <input type="text" class="form-control" id="name" value="动力节点-">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
-		    <label for="expectedClosingTime">预计成交日期</label>
-		    <input type="text" class="form-control mydate" id="expectedClosingTime" readonly>
+		    <label for="expectedDate">预计成交日期</label>
+		    <input type="text" class="form-control mydate" id="expectedDate" readonly>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="stage">阶段</label>
 		    <select id="stage"  class="form-control">
 		    	<option></option>
 		    	<c:forEach items="${stageList}" var="stage">
-					<option>${stage.value}</option>
+					<option value="${stage.id}">${stage.value}</option>
 				</c:forEach>
 		    </select>
 		  </div>

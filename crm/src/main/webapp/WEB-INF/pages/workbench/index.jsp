@@ -207,8 +207,7 @@
                             class="glyphicon glyphicon-chevron-right"></span> 线索统计图表</a></li>
                     <li class="liClass"><a href="chart/customerAndContacts/index.html" target="workareaFrame">&nbsp;&nbsp;&nbsp;<span
                             class="glyphicon glyphicon-chevron-right"></span> 客户和联系人统计图表</a></li>
-                    <li class="liClass"><a href="chart/transaction/index.html" target="workareaFrame">&nbsp;&nbsp;&nbsp;<span
-                            class="glyphicon glyphicon-chevron-right"></span> 交易统计图表</a></li>
+                    <li class="liClass"><a href="workbench/chart/transaction/toIndex.do" target="workareaFrame">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-chevron-right"></span> 交易统计图表</a></li>
                 </ul>
             </li>
             <li class="liClass"><a href="javascript:void(0);" target="workareaFrame"><span

@@ -272,4 +272,12 @@
         where name like '%' #{name} '%'
     </select>
 
+    <select id="selectCustomerByName" resultMap="BaseResultMap">
+        select
+         id, owner, name, website, phone, create_by, create_time, edit_by, edit_time, contact_summary,
+         next_contact_time, description, address
+        from tbl_customer
+        where name =#{name}
+    </select>
+
 </mapper>

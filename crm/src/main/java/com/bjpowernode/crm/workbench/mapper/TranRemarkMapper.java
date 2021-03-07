@@ -18,4 +18,6 @@ public interface TranRemarkMapper {
     int updateByPrimaryKey(TranRemark record);
 
     void insertTranRemarkByList(List<TranRemark> tranRemarkList);
+
+    List<TranRemark> selectTranRemarkForDetailByTranId(String id);
 }

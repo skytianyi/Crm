@@ -133,4 +133,14 @@
        (#{tr.id}, #{tr.noteContent}, #{tr.createBy}, #{tr.createTime}, #{tr.editBy}, #{tr.editTime}, #{tr.editFlag}, #{tr.tranId})
      </foreach>
   </insert>
+
+  <select id="selectTranRemarkForDetailByTranId" resultMap="BaseResultMap">
+    select
+    ttr.id, ttr.note_content, u.name as create_by, ttr.create_time, u2.name as edit_by, ttr.edit_time, ttr.edit_flag, ttr.tran_id
+    from tbl_tran_remark ttr
+    join tbl_user u on ttr.create_by=u.id
+    left join tbl_user u2 on ttr.edit_by=u2.id
+    where ttr.tran_id=#{tranId}
+  </select>
+
 </mapper>

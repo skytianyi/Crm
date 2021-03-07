@@ -68,4 +68,13 @@
       activity_id = #{activityId,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+  <insert id="insertConActRelByList">
+    insert into tbl_contacts_activity_relation (id, contacts_id, activity_id)
+    values
+    <foreach collection="list" separator="," item="conActRel">
+      (#{conActRel.id},#{conActRel.contactsId},#{conActRel.activityId})
+    </foreach>
+  </insert>
+
 </mapper>

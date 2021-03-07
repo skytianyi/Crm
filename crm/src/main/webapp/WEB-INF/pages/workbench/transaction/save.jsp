@@ -112,13 +112,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				var contactsId = this.value;
 				var name = $(this).attr("contactsName");
 				$("#create-contactsName").val(name);
-				$("#hidden-contactsName").val(contactsId);
+				$("#hidden-contactsId").val(contactsId);
 				$("#findContacts").modal("hide");
 			});
 
 			//给阶段下拉框添加changge事件
-			$("#create-transactionStage").change(function () {
-				var stage=$("#create-transactionStage>option:selected").text();
+			$("#create-stage").change(function () {
+				var stage=$("#create-stage>option:selected").text();
 				if(stage==""){
 					//清空可能性
 					$("#create-possibility").val("");
@@ -138,7 +138,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			});
 
 			//客户名称自动补全
-			$('#create-accountName').typeahead({
+			$('#create-customerName').typeahead({
 				source: function (query, process) {
 					/*用户在容器中输入关键字，每次键盘弹起，都会自动触发该函数；
 					可以在函数中向后台发送异步请求，查询客户名称，以字符串数组([])的形式返回到客户端；
@@ -169,6 +169,101 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				}
 			});
 
+			//点击保存按钮创建交易
+			$("#saveTranBtn").click(function () {
+
+				var owner=$.trim($("#create-owner").val());
+				var money=$("#create-money").val();
+				var name=$.trim($("#create-name").val());
+				var expectedDate=$.trim($("#create-expectedDate").val());
+				var customerName=$.trim($("#create-customerName").val());
+				var stage=$.trim($("#create-stage").val());
+				var type=$("#create-type").val();
+				var source=$("#create-source").val();
+				var activityId=$("#hidden-activitySrc").val();
+				var contactsId=$("#hidden-contactsId").val();
+				var description=$("#create-description").val();
+				var contactSummary=$("#create-contactSummary").val();
+				var nextContactTime=$("#create-nextContactTime").val();
+
+
+				//表单验证
+				if(owner==""){
+					alert("所有者不能为空");
+					return;
+				}
+				if(name==""){
+					alert("名称不能为空");
+					return;
+				}
+				if(expectedDate==""){
+					alert("预计成交日期不能为空");
+					return;
+				}
+				if(customerName==""){
+					alert("客户名称不能为空");
+					return;
+				}
+				if(stage==""){
+					alert("阶段不能为空");
+					return;
+				}
+
+				var currentDate = new Date();
+				var time=currentDate.toLocaleDateString().split('/').join('-');
+
+				//预计成交日期不能小于当前时间
+				if(expectedDate<time){
+					alert("预计成交日期小于当前时间");
+					return;
+				}
+
+				//下次联系时间不能小于当前时间
+				if(nextContactTime<time){
+					alert("下次联系时间不能小于当前时间");
+					return;
+				}
+
+
+
+				$.ajax({
+
+					url:"workbench/transaction/saveCreateTran.do",
+					type:"post",
+					data:{
+						owner:owner,
+						money:money,
+						name:name,
+						expectedDate:expectedDate,
+						customerName:customerName,
+						stage:stage,
+						type:type,
+						source:source,
+						activityId:activityId,
+						contactsId:contactsId,
+						description:description,
+						contactSummary:contactSummary,
+						nextContactTime:nextContactTime
+					},
+					dataType:"json",
+					success:function (resp) {
+						if(resp.code=="1"){
+							//跳到主页面
+							window.location.href="workbench/transaction/toIndex.do";
+						}else {
+							alert(resp.message);
+						}
+					}
+				})
+
+
+
+			});
+
+			//点击取消按钮
+			$("#removeTranBtn").click(function () {
+				window.location.href="workbench/transaction/toIndex.do";
+			});
 
 
 
@@ -283,46 +378,46 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	<div style="position:  relative; left: 30px;">
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
-			<button type="button" class="btn btn-primary">保存</button>
-			<button type="button" class="btn btn-default">取消</button>
+			<button type="button" class="btn btn-primary" id="saveTranBtn">保存</button>
+			<button type="button" class="btn btn-default" id="removeTranBtn">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>
 	<form class="form-horizontal" role="form" style="position: relative; top: -30px;">
 		<div class="form-group">
-			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionOwner">
+				<select class="form-control" id="create-owner">
 				 <c:forEach items="${userList}" var="user">
                      <option value="${user.id}">${user.name}</option>
                  </c:forEach>
 				</select>
 			</div>
-			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
+			<label for="create-money" class="col-sm-2 control-label">金额</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-amountOfMoney">
+				<input type="text" class="form-control" id="create-money">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-transactionName">
+				<input type="text" class="form-control" id="create-name">
 			</div>
-			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-expectedDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control mydate" id="create-expectedClosingDate">
+				<input type="text" class="form-control mydate" id="create-expectedDate">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-customerName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建" autocomplete="off">
+				<input type="text" class="form-control" id="create-customerName" placeholder="支持自动补全，输入客户不存在则新建" autocomplete="off">
 			</div>
-			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-stage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-transactionStage">
+			  <select class="form-control" id="create-stage">
 			  	<option></option>
 			   <c:forEach items="${stageList}" var="stage">
                    <option value="${stage.id}">${stage.value}</option>
@@ -332,9 +427,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		</div>
 		
 		<div class="form-group">
-			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
+			<label for="create-type" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionType">
+				<select class="form-control" id="create-type">
 				  <option></option>
 				  <c:forEach items="${typeList}" var="type">
                       <option value="${type.id}">${type.value}</option>
@@ -348,9 +443,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		</div>
 		
 		<div class="form-group">
-			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
+			<label for="create-source" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-clueSource">
+				<select class="form-control" id="create-source">
 				  <option></option>
 				  <c:forEach items="${sourceList}" var="source">
                       <option value="${source.id}">${source.value}</option>
@@ -368,14 +463,14 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="openContactsName"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-contactsName" readonly>
-				<input type="hidden" id="hidden-contactsName">
+				<input type="hidden" id="hidden-contactsId">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-describe" class="col-sm-2 control-label">描述</label>
+			<label for="create-description" class="col-sm-2 control-label">描述</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-describe"></textarea>
+				<textarea class="form-control" rows="3" id="create-description"></textarea>
 			</div>
 		</div>
 		

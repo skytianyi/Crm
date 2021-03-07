@@ -2,6 +2,8 @@ package com.bjpowernode.crm.workbench.mapper;
 
 import com.bjpowernode.crm.workbench.domain.ContactsActivityRelation;
 
+import java.util.List;
+
 public interface ContactsActivityRelationMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,7 @@ public interface ContactsActivityRelationMapper {
     int updateByPrimaryKeySelective(ContactsActivityRelation record);
 
     int updateByPrimaryKey(ContactsActivityRelation record);
+
+    void insertConActRelByList(List<ContactsActivityRelation> conActRelList);
+
 }
